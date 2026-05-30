@@ -16,7 +16,7 @@ public sealed class KernelLatencyTracer
     /// <summary>Run a blocking capture for <paramref name="seconds"/> and return ranked stats.</summary>
     public IReadOnlyList<DriverStatRow> Capture(double seconds)
     {
-        // A leftover kernel session from a prior crash would block EnableKernelProvider.
+        // Constructing the session destroys any leftover kernel session of the same name from a prior crash.
         using var session = new TraceEventSession(KernelTraceEventParser.KernelSessionName);
         session.StopOnDispose = true;
 

@@ -31,7 +31,7 @@ if (!IsElevated())
         var psi = new ProcessStartInfo
         {
             FileName = Environment.ProcessPath!,
-            Arguments = string.Join(' ', args),
+            Arguments = string.Join(' ', args.Select(a => a.Contains(' ') ? $"\"{a}\"" : a)),
             UseShellExecute = true,
             Verb = "runas",
         };
@@ -68,9 +68,18 @@ Console.WriteLine(table);
 
 string stamp = DateTime.Now.ToString("yyyy-MM-dd_HHmm", CultureInfo.InvariantCulture);
 string baseName = Path.Combine(outDir, $"KernelLatencyDetector_{stamp}");
-File.WriteAllText(baseName + ".txt", table);
-File.WriteAllText(baseName + ".json", Reporter.ToJson(rows, seconds, thresholdMicros));
-Console.WriteLine($"Report: {baseName}.txt / .json");
+try
+{
+    Directory.CreateDirectory(outDir);
+    File.WriteAllText(baseName + ".txt", table);
+    File.WriteAllText(baseName + ".json", Reporter.ToJson(rows, seconds, thresholdMicros));
+    Console.WriteLine($"Report: {baseName}.txt / .json");
+}
+catch (Exception ex)
+{
+    Console.Error.WriteLine($"Failed to write report to '{outDir}': {ex.Message}");
+    return 1;
+}
 return 0;
 
 [System.Runtime.Versioning.SupportedOSPlatform("windows")]

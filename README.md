@@ -112,6 +112,12 @@ broken device. Once the tool names the `.sys` file, a quick search for what inst
 usually points straight at the fix — disabling or removing the responsible feature, or
 updating the driver.
 
+It's worth remembering that the same symptom can have very different causes. Once upon a
+time, this same kind of freezing turned out to be a **failing USB Bluetooth adapter** —
+tracked down the hard way, through manual log digging long before this tool existed. Same
+stutter, completely different root cause. That's exactly the situation this tool is meant to
+short-circuit: instead of guessing, you get the responsible driver named directly.
+
 ## Output files
 
 Each run writes a timestamped pair of reports to `--out`:

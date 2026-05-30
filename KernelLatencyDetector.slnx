@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/KernelLatencyDetector/KernelLatencyDetector.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/KernelLatencyDetector.Tests/KernelLatencyDetector.Tests.csproj" />
+  </Folder>
+</Solution>

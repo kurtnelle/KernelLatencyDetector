@@ -2,3 +2,7 @@ bin/
 obj/
 *.user
 .vs/
+
+# Generated capture reports (runtime output)
+KernelLatencyDetector_*.txt
+KernelLatencyDetector_*.json

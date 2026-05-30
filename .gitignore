@@ -6,3 +6,6 @@ obj/
 # Generated capture reports (runtime output)
 KernelLatencyDetector_*.txt
 KernelLatencyDetector_*.json
+
+# Release packaging artifacts
+*.zip

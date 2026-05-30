@@ -89,6 +89,29 @@ In this run the top culprit is `vmswitch.sys` — the Hyper-V virtual switch dri
 real-world DPC-latency offender on machines running Hyper-V, WSL2, or
 virtualization-based security.
 
+## Real-world example: tracking down a `vmswitch.sys` stall
+
+This is the case that the example output above comes from — a real diagnosis on a
+development machine.
+
+- **Suspicion:** the kernel appeared to be pausing periodically, the kind of stall that
+  causes audio dropouts and stutter.
+- **Capture:** running `KernelLatencyDetector.exe --seconds 10` flagged a single culprit —
+  `vmswitch.sys` at **621 µs** max DPC, the only driver over the 500 µs threshold. Every
+  other driver was comfortably below it.
+- **Identifying it:** `vmswitch.sys` is the **Hyper-V virtual switch**. It isn't installed by
+  default — something had enabled the Hyper-V networking stack. On this machine that turned
+  out to be **Docker Desktop**, which runs on the WSL2 / Hyper-V backend and brings the
+  virtual switch with it.
+- **Fix:** uninstalling Docker Desktop tore down the Hyper-V virtual switch, removing
+  `vmswitch.sys` and its DPC latency. A follow-up capture confirmed no driver exceeded the
+  threshold.
+
+The takeaway: a high-latency driver is often a *symptom* of an installed feature, not a
+broken device. Once the tool names the `.sys` file, a quick search for what installs it
+usually points straight at the fix — disabling or removing the responsible feature, or
+updating the driver.
+
 ## Output files
 
 Each run writes a timestamped pair of reports to `--out`:
